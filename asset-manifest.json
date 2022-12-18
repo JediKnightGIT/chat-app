@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/chat-app/static/css/main.ba05aa71.css",
+    "main.js": "/chat-app/static/js/main.6190b116.js",
+    "static/media/trinity_bg.jpg": "/chat-app/static/media/trinity_bg.ff072495de1beb5d4bac.jpg",
+    "index.html": "/chat-app/index.html",
+    "main.ba05aa71.css.map": "/chat-app/static/css/main.ba05aa71.css.map",
+    "main.6190b116.js.map": "/chat-app/static/js/main.6190b116.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ba05aa71.css",
+    "static/js/main.6190b116.js"
+  ]
+}
