@@ -1,0 +1,42 @@
+@import './mixins';
+
+@import './Auth/Auth';
+@import './Header/Header';
+@import './Sidebar/Sidebar';
+@import './Profile/Profile';
+@import './Profile/MyPosts/MyPosts';
+@import './Profile/MyPosts/Post/Post';
+@import './Dialogs/Dialogs';
+@import './Contacts/Contacts';
+@import './Settings/Settings';
+
+@import 'SearchField/SearchField';
+@import 'common/Spinner/Spinner';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  box-sizing: inherit;
+}
+
+.app-wrapper {
+  display: grid;
+
+  // grid-template-rows: 100px 1fr;
+  grid-template-columns: 2fr 10fr;
+  grid-template-areas: 
+  "sidebar content";
+
+  margin: 0 auto;
+  width: 1200px;
+}
+
+.content {
+  grid-area: content;
+
+  background-color: rgb(51, 51, 51);
+}

@@ -1,0 +1,43 @@
+.contacts {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact {
+  display: flex;
+  padding: 10px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: rgba($color: black, $alpha: .1);
+  }
+}
+
+.contact__img {
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.contact__name {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.pages {
+  display: flex;
+}
+
+.page {
+  margin-right: 10px;
+
+  cursor: pointer;
+
+  &.active {
+    font-weight: bold;
+    cursor: default;
+  }
+}

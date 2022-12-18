@@ -1,0 +1,29 @@
+.post {
+  margin-bottom: 30px;
+}
+
+.post__content {
+  display: flex;
+
+  margin-bottom: 10px;
+  width: 43%;
+}
+
+.post__img {
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.reactions {
+  display: flex;
+}
+
+.reactions__item {
+  padding: 3px 10px;
+  padding-bottom: 6px;
+
+  background-color: lightblue;
+  border-radius: 8px;
+
+  cursor: pointer;
+}

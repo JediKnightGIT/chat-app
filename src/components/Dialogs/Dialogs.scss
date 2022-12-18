@@ -1,0 +1,178 @@
+.dialogs {
+  display: grid;
+  grid-template-columns: 4fr 10fr;
+  grid-template-rows: 1.5fr 10fr;
+}
+
+.dialogs-header {
+  grid-area: 1 / 1 / 2 / 3;
+  
+  display: flex;
+  justify-content: space-between;
+}
+
+.dialogs-header__chat {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+
+  cursor: pointer;
+}
+
+.dialogs-header__avatar {
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.dialogs-header__chat-name {
+  font-weight: 500;
+  color: white;
+}
+
+.dialogs-header__tools-container {
+  // flex-basis: 33%;
+  // max-width: 33%;
+
+  background-color: gray;
+}
+
+.dialogs__list {
+  @include reset-list;
+  grid-area: 2 / 1 / 4 / 2;
+
+  padding-left: 10px;
+  padding-right: 7px;
+}
+
+
+.chat__link {
+  display: flex;
+  padding: 7px 10px;
+
+  border-radius: 12px;
+
+  color: white;
+  text-decoration: none;
+}
+
+.chat__link:hover,
+.chat__link:focus {
+  background-color: rgba($color: white, $alpha: .15);
+  outline: none;
+}
+
+.chat__link.active {
+  background-color: rgba($color: white, $alpha: .25);
+}
+
+.chat__img {
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.chat__text {
+  margin-right: auto;
+}
+
+.chat__name {
+  margin-bottom: 5px;
+}
+
+.chat__message {
+  margin: 0;
+}
+
+.messages {
+  grid-area: 2 / 2 / 4 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  padding-bottom: 15px;
+
+  background-color: rgb(36, 36, 36);
+
+  overflow-x: hidden;
+}
+
+.messages__list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  
+  padding: 0 15%;
+  padding-bottom: 10px;
+}
+
+.message {
+  display: flex;
+
+  margin-top: 5px;
+  padding: 10px;
+
+  background-color: rgb(108, 78, 126);
+  border-radius: 12px;
+  border-bottom-left-radius: 0;
+
+  &--recepient {
+    align-self: flex-end;
+
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.message--sender + .message--recepient, 
+.message--recepient + .message--sender {
+  margin-top: 10px;
+}
+
+.message--sender, .message--recepient {
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+.message__text {
+  margin-right: 5px;
+  color: white;
+  
+  word-break: break-word;
+}
+
+.message__date {
+  align-self: flex-end;
+  margin-bottom: -5px;
+
+  color: rgb(200, 200, 200);
+}
+
+.messagebox {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 0 15%;
+  padding-right: 8%;
+
+  background-color: rgb(36, 36, 36);
+}
+
+.messagebox__field {
+  flex-basis: 91%;
+  max-width: 91%;
+}
+
+.messagebox__input {
+  padding: 10px 20px;
+  max-height: 27rem;
+  width: 100%;
+
+  background-color: rgb(51, 51, 51);
+  border-color: #3b3b3b;
+  border-radius: 12px;
+  outline: none;
+
+  color: white;
+
+  resize: none;
+}
