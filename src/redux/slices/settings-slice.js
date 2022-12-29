@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { settingsAPI } from "../../api/api";
 
 export const initialState = {
-  status: "",
+  profile: null,
+  status: ""
 };
 
 const settingsSlice = createSlice({
@@ -10,12 +11,14 @@ const settingsSlice = createSlice({
   initialState,
   reducers: {
     setStatus(state, action) {
-      // return {
-      //   ...state,
-      //   status: action.payload,
-      // };
       state.status = action.payload;
     },
+    setProfile(state, action) {
+      state.profile = action.payload;
+    },
+    savePhoto(state, action) {
+      state.profile.photos = action.payload
+    }
   },
 });
 
@@ -33,5 +36,21 @@ export const updateStatus = (status) => async (dispatch) => {
   }
 };
 
-export const { setStatus } = settingsSlice.actions;
+export const getProfile = (userId) => async (dispatch) => {
+  const response = await settingsAPI.getUserInfo(userId);
+  if (response.status === 200) {
+    dispatch(setProfile(response.data));
+  }
+};
+
+export const setPhoto = (file) => async (dispatch) => {
+  const response = await settingsAPI.savePhoto(file);
+
+  console.log(response);
+  if (response.data.resultCode === 0) {
+    dispatch(savePhoto(response.data.data.photos));
+  }
+};
+
+export const { setStatus, setProfile, savePhoto } = settingsSlice.actions;
 export default settingsSlice.reducer;

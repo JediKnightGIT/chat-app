@@ -9,13 +9,22 @@ const instance = axios.create({
 });
 
 export const usersAPI = {
-  getUsers(currentPage = 1, pageSize = 100) {
-    return instance
-      .get(`users?page=${currentPage}&count=${pageSize}`)
-      .then((response) => response.data)
-      .catch((error) => {
-        if (axios.isCancel(error)) return;
-      });
+  async getUsers(currentPage = 1, pageSize = 100) {
+    // return instance
+    //   .get(`users?page=${currentPage}&count=${pageSize}`)
+    //   .then((response) => response.data)
+    //   .catch((error) => {
+    //     if (axios.isCancel(error)) return;
+    //   });
+
+    try {
+      const response = await instance.get(
+        `users?page=${currentPage}&count=${pageSize}`
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isCancel(error)) return;
+    }
   },
 };
 
@@ -29,6 +38,14 @@ export const settingsAPI = {
   updateUserStatus(status) {
     console.log("put", status);
     return instance.put(`profile/status`, { status });
+  },
+  savePhoto(file) {
+    console.log("put", file);
+    const formData = new FormData();
+    formData.append("image", file);
+    return instance.put(`profile/photo`, formData, {
+      "Content-Type": "multipart/form-data",
+    });
   },
 };
 

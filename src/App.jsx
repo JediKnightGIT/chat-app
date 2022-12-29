@@ -9,11 +9,11 @@ import Login from './components/Login/Login'
 import Settings from './components/Settings/Settings'
 import { withRouter } from './components/hoc/withRouter'
 import Spinner from './components/common/Spinner/Spinner'
-import { useAuth } from './useAuth'
+import { useApp } from './useApp'
 
 
 function App() {
-  const { initialized } = useAuth()
+  const { initialized } = useApp()
 
   if (!initialized) return <Spinner />
 

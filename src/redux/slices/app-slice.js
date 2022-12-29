@@ -17,11 +17,14 @@ const appSlice = createSlice({
 })
 
 // thunks
-export const initializeApp = () => async (dispatch) => {
-  const promise = dispatch(getAuthUserData())
-
+export const initializeApp = () => (dispatch) => {
+  // Promise only
+  // const promise = dispatch(getAuthUserData())
   // promise.then(() => dispatch(setInitialized()))
-  promise.then(() => dispatch(setInitialized()))
+
+  // Promise + await
+  return dispatch(getAuthUserData())
+    .then(() => dispatch(setInitialized()))
 }
 
 export const { setInitialized } = appSlice.actions
