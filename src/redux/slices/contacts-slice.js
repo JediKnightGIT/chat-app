@@ -3,7 +3,7 @@ import { usersAPI } from "../../api/api";
 
 const initialState = {
   contacts: [],
-  pageSize: 100,
+  pageSize: 10,
   contactsCount: 0,
   currentPage: 1,
   isLoaded: true,

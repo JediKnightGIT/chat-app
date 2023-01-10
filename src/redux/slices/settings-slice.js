@@ -3,7 +3,7 @@ import { settingsAPI } from "../../api/api";
 
 export const initialState = {
   profile: null,
-  status: ""
+  status: "",
 };
 
 const settingsSlice = createSlice({
@@ -17,8 +17,8 @@ const settingsSlice = createSlice({
       state.profile = action.payload;
     },
     savePhoto(state, action) {
-      state.profile.photos = action.payload
-    }
+      state.profile.photos = action.payload;
+    },
   },
 });
 
@@ -28,11 +28,18 @@ export const getStatus = (userId) => async (dispatch) => {
   dispatch(setStatus(response.data));
 };
 
-export const updateStatus = (status) => async (dispatch) => {
-  const response = await settingsAPI.updateUserStatus(status);
-  console.log(response);
-  if (response.data.resultCode === 0) {
-    dispatch(setStatus(status));
+export const updateStatus = (status, setError) => async (dispatch) => {
+  try {
+    const response = await settingsAPI.updateUserStatus(status);
+
+    const { fieldsErrors, resultCode, messages } = response.data;
+    if (resultCode === 0) {
+      dispatch(setStatus(status));
+    } else {
+      setFieldsError("status", messages, fieldsErrors, setError);
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -46,11 +53,41 @@ export const getProfile = (userId) => async (dispatch) => {
 export const setPhoto = (file) => async (dispatch) => {
   const response = await settingsAPI.savePhoto(file);
 
-  console.log(response);
   if (response.data.resultCode === 0) {
     dispatch(savePhoto(response.data.data.photos));
   }
 };
+
+export const saveProfile =
+  (profile, setError) => async (dispatch, getState) => {
+    try {
+      const userId = getState().auth.userId;
+      const response = await settingsAPI.saveProfile(profile);
+
+      const { fieldsErrors, resultCode, messages } = response.data;
+
+      if (resultCode === 0) {
+        dispatch(getProfile(userId));
+      } else {
+        setFieldsError("profile", messages, fieldsErrors, setError);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+function setFieldsError(field, messages, fieldsErrors, setError) {
+  if (fieldsErrors.length > 0) {
+    for (let key in fieldsErrors) {
+      let message = fieldsErrors[key].error;
+      setError(fieldsErrors[key].field, { type: "server", message });
+    }
+  } else
+    for (let key in messages) {
+      let message = messages[key];
+      setError(field, { type: "server", message });
+    }
+}
 
 export const { setStatus, setProfile, savePhoto } = settingsSlice.actions;
 export default settingsSlice.reducer;

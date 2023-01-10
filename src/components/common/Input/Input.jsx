@@ -6,12 +6,12 @@ import classNames from 'classnames';
 import { FormErrorMessage } from './form-error-message';
 
 
-export const FormInput = ({ id, label, className, name, register, rules, errors, ...props }) => {
+export const FormInput = forwardRef(({ id, label, className, name, register, rules, errors, ...props }, ref) => {
   const errorMessages = get(errors, name);
   const hasError = !!(errors && errorMessages);
 
   return (
-    <div className={className} aria-live="polite">
+    <div ref={ref} className={className} aria-live="polite">
       <label htmlFor={id}>{label}</label>
       <Input id={id} name={name} aria-invalid={hasError}
         className={classNames({
@@ -20,14 +20,13 @@ export const FormInput = ({ id, label, className, name, register, rules, errors,
         })}
         {...props}
         {...(register && register(name, rules))}
-        onChange={props.onChange}
       />
       <ErrorMessage errors={errors} name={name}
         render={({ message }) => <FormErrorMessage>{message}</FormErrorMessage>}
       />
     </div>
   )
-}
+})
 
 export const Textarea = ({ className, name, placeholder, register, rules, errors, ...props }) => {
   // If the name is in a FieldArray, it will be 'fields.index.fieldName' and errors[name] won't return anything, so we are using lodash get
@@ -48,18 +47,23 @@ export const Textarea = ({ className, name, placeholder, register, rules, errors
 };
 
 export const Input = forwardRef(
-  (
-    { id, name, label,
-      type = 'text', size = 'medium', className = '',
-      placeholder, ...props
-    },
-    ref
-  ) => {
+  (props, ref) => {
     return (
-      <input id={id} ref={ref} name={name} type={type} aria-label={label} onChange={props.onChange}
-        placeholder={placeholder} className={classNames('form-control', className)}
+      <input ref={ref} id={props.id} name={props.name} type={props.type} aria-label={props.label}
+        placeholder={props.placeholder} className={classNames('form-control', props.className)}
         {...props}
       />
     );
   }
 );
+
+// export const InputRHK = forwardRef(
+//   (props, ref) => {
+//     return (
+//       <input ref={ref} id={props.id} name={props.name} type={props.type} aria-label={props.label}
+//         placeholder={props.placeholder} className={classNames('form-control', props.className)}
+//         {...props}
+//       />
+//     );
+//   }
+// );

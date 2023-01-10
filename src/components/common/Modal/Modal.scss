@@ -1,0 +1,95 @@
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: 0;
+  bottom: 0;
+  transform: translate(-38%, -50%);
+
+  width: 30%;
+  // max-height: 605px;
+  // min-height: 470px;
+  height: 80vh;
+  max-height: 605px;
+
+  background-color: #17212B;
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background-color: rgba(0,0,0, .5);
+}
+
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity .3s ease-in-out;
+
+  &--after-open {
+    opacity: 1;
+  }
+  &--before-close {
+    opacity: 0;
+  }
+}
+
+.ReactModal__Content {
+  &--before-close {
+    transform: translate(-38%, -50%);
+  }
+  &--after-open {
+    transform: translate(-50%, -50%);
+    transition: transform .3s ease-in-out;
+  }
+}
+.modal-header {
+  padding: 20px 25px;
+  width: 100%;
+  border-bottom: 1px solid #101921;
+}
+
+.modal-header__title {
+  margin: 0;
+
+  font-size: 18px;
+  color: white;
+}
+
+.modal-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 10px;
+  width: 100%;
+
+  border-top: 1px solid #101921;
+}
+
+.close-modal {
+  display: block;
+  margin-left: auto;
+  padding: 9px 13px;
+
+  background-color: transparent;
+  border: none;
+
+  font-weight: 700;
+  color: #6AB3F2;
+
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: rgba(255,255,255,.1);
+    border-radius: 6px;
+  }
+}

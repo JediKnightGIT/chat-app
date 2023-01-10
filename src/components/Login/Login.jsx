@@ -11,9 +11,7 @@ import { emailValidator, required } from "../common/utils/validators";
 
 const Login = () => {
 
-  const { register, handleSubmit, formState: { errors }, setError, clearErrors, reset } = useForm({
-    // mode: 'onChange'
-  })
+  const { register, handleSubmit, formState: { errors }, setError, clearErrors, reset } = useForm()
 
   // const { initialized } = useAuth()
 
@@ -27,6 +25,7 @@ const Login = () => {
     reset()
   }
 
+  // Common error message is cleared when user starts to interact with fields
   const handleErrors = () => {
     clearErrors('credentials')
   }

@@ -12,6 +12,8 @@
 
 @import 'SearchField/SearchField';
 @import 'common/Spinner/Spinner';
+@import 'common/Modal/Modal';
+@import 'common/Scrollbar/Scrollbar';
 
 *,
 *::before,
@@ -28,7 +30,7 @@ html {
 
   // grid-template-rows: 100px 1fr;
   grid-template-columns: 2fr 10fr;
-  grid-template-areas: 
+  grid-template-areas:
   "sidebar content";
 
   margin: 0 auto;

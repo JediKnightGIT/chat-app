@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import ReactModal from 'react-modal'
 // import { Navigate } from "react-router-dom";
 
 import EditProfile from './EditProfile/EditProfile'
@@ -26,11 +27,35 @@ const Settings = () => {
   return (
     <div className="settings">
       <h2>Settings</h2> <br/>
-      <EditProfile profile={profile} status={status} updateStatus={updateStatus} setPhoto={setPhoto} dispatch={dispatch} />
+      <EditProfile userId={userId} profile={profile} status={status} getStatus={getStatus} updateStatus={updateStatus} setPhoto={setPhoto} dispatch={dispatch} />
       <button onClick={handleLogout}>Log out</button>
       <span>{isAuth}</span>
     </div>
   )
 }
 
-export default withAuthNavigate(Settings)
+export function SettingsModal({ modalShown, setModalShown }) {
+  const closeModal = () => setModalShown(false)
+
+  return (
+    <ReactModal
+      isOpen={modalShown}
+      appElement={document.getElementById('root') || undefined}
+      className="modal"
+      overlayClassName="overlay"
+      onRequestClose={closeModal}
+      shouldCloseOnOverlayClick={true}
+      closeTimeoutMS={300}
+    >
+      <div className="modal-header">
+        <h2 className="modal-header__title">Settings</h2>
+      </div>
+      <Settings />
+      <div className="modal-footer">
+        <button className="close-modal" onClick={closeModal}>Close</button>
+      </div>
+    </ReactModal>
+  )
+}
+
+export default SettingsModal

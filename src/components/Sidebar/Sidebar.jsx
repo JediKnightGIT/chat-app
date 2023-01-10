@@ -1,18 +1,22 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import ReactModal from 'react-modal'
 
-import { openModal } from '../../redux/sidebar-reducer'
+// import { openModal } from '../../redux/sidebar-reducer'
 import FieldSearch from '../SearchField/SearchField'
-import Contacts from '../Contacts/Contacts'
+import ContactsModal from '../Contacts/Contacts'
 import useSidebar from './useSidebar'
 import { setContacts } from '../../redux/slices/contacts-slice'
+import SettingsModal from '../Settings/Settings'
 
 const Sidebar = () => {
-  const { isModalShown, dispatch } = useSidebar()
+  const { modalShown, setModalShown, dispatch } = useSidebar()
 
-  const handleModal = () => {
-    dispatch(openModal())
+  const openModal = (e, type) => {
+    // setContactsModalShown(true)
+    setModalShown((modalShown) => ({
+      ...modalShown,
+      [type]: true
+    }))
     dispatch(setContacts([]))
   }
 
@@ -30,19 +34,14 @@ const Sidebar = () => {
             <NavLink end to="/" className="sidebar__link">
               Messages
             </NavLink>
-            <ReactModal
-              isOpen={isModalShown}
-              appElement={document.getElementById('root') || undefined}
-            >
-              <button onClick={handleModal}>Close modal</button>
-              <Contacts />
-            </ReactModal>
-            <button onClick={handleModal} className="sidebar__link">
+            <ContactsModal modalShown={modalShown.contacts} setModalShown={setModalShown} />
+            <button onClick={(e) => openModal(e, 'contacts')} className="sidebar__link">
               Contacts
             </button>
-            <NavLink to="/settings" className="sidebar__link">
+            <SettingsModal modalShown={modalShown.settings} setModalShown={setModalShown} />
+            <button onClick={(e) => openModal(e, 'settings')} className="sidebar__link">
               Settings
-            </NavLink>
+            </button>
           </div>
         </div>
 

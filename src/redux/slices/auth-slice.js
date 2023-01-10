@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { authAPI } from "../../api/api";
+import { authAPI, securityAPI } from "../../api/api";
 
 const initialState = {
   userId: null,
@@ -67,11 +67,8 @@ export const login =
         setFieldsError();
         break;
       case 10:
-        // authAPI.getCaptcha().then((data) => {
-        //   dispatch(setCaptcha(data.data.url));
-        // });
-        const data = await authAPI.getCaptcha()
-        dispatch(setCaptcha(data.data.url));
+        const response = await securityAPI.getCaptcha()
+        dispatch(setCaptcha(response.data.url));
         setFieldsError();
         break;
       default:
