@@ -1,61 +1,103 @@
-import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useRef } from 'react'
 import ReactModal from 'react-modal'
-// import { Navigate } from "react-router-dom";
+import classnames from 'classnames'
 
+import useSettings from './useSettings'
 import EditProfile from './EditProfile/EditProfile'
-import { getProfile, getStatus, updateStatus, setPhoto } from '../../redux/slices/settings-slice'
 import { logout } from '../../redux/slices/auth-slice'
-import { withAuthNavigate } from '../hoc/withAuthNavigate';
+import Avatar from './Avatar'
+// import { withAuthNavigate } from '../hoc/withAuthNavigate';
 
-const Settings = () => {
-  const profile = useSelector((state) => state.settings.profile)
-  const status = useSelector((state) => state.settings.status)
-  const userId = useSelector((state) => state.auth.userId)
-  const isAuth = useSelector((state) => state.auth.isAuth)
-  const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(getProfile(userId))
-    dispatch(getStatus(userId))
-  }, [userId, dispatch])
+const Settings = ({ modalShown, closeModal }) => {
+  const { profile, status, isAuth, updateStatus, dispatch, settings, setSettings, isScrollTop, handleScroll, position, incPosition, decPosition, resetPosition, onPhotoSelected, clearSettings, active, setActive } = useSettings()
+
+  const modalContainer = useRef()
+
+  const goBack = () => {
+    dispatch(incPosition())
+    setActive('general')
+    clearSettings(active)
+  }
+
+  const goNext = (type) => {
+    dispatch(decPosition())
+    setSettings((s) => {
+      return [...s, {[type]: settingsObj[type]}]
+    })
+    setActive(type)
+  }
+
+  const closeSettings = () => {
+    clearSettings()
+    closeModal()
+    setTimeout(() => {
+      dispatch(resetPosition())
+    }, 200);
+  }
+
+  const settingsObj = {
+    info: <EditProfile key={'info' + Math.floor(Date.now() / 1000)} profile={profile} status={status} position={position} closeModal={closeSettings} updateStatus={updateStatus} dispatch={dispatch} onPhotoSelected={onPhotoSelected} goBack={goBack} />,
+
+    hey: <div key={'hey' + Math.floor(Date.now() / 1000)} className="modal-item">hey</div>
+  }
 
   const handleLogout = () => {
     dispatch(logout())
   }
 
-  return (
-    <div className="settings">
-      <h2>Settings</h2> <br/>
-      <EditProfile userId={userId} profile={profile} status={status} getStatus={getStatus} updateStatus={updateStatus} setPhoto={setPhoto} dispatch={dispatch} />
-      <button onClick={handleLogout}>Log out</button>
-      <span>{isAuth}</span>
-    </div>
-  )
-}
-
-export function SettingsModal({ modalShown, setModalShown }) {
-  const closeModal = () => setModalShown(false)
+  if (!profile) return ''
+  // if (!profile) return <Spinner />
 
   return (
     <ReactModal
       isOpen={modalShown}
       appElement={document.getElementById('root') || undefined}
-      className="modal"
+      className={{
+        base: "modal modal__settings",
+        afterOpen: "modal__settings--after-open",
+        beforeClose: "modal__settings--before-close",
+      }}
       overlayClassName="overlay"
-      onRequestClose={closeModal}
+      onRequestClose={closeSettings}
       shouldCloseOnOverlayClick={true}
-      closeTimeoutMS={300}
+      closeTimeoutMS={200}
     >
-      <div className="modal-header">
-        <h2 className="modal-header__title">Settings</h2>
-      </div>
-      <Settings />
-      <div className="modal-footer">
-        <button className="close-modal" onClick={closeModal}>Close</button>
+      <div ref={modalContainer} style={{ transform: `translateX(${position * 100}%)` }} className="modal-container">
+        {/* Settings */}
+        <div className={classnames("modal-item", { "active": position === 0 })}>
+          <div className={classnames("modal-header", { "bordered": isScrollTop })}>
+            <h2 className="modal-header__title">Settings</h2>
+            <button className="cross-modal" onClick={closeSettings}>✕</button>
+          </div>
+
+          <div className="settings" onScroll={handleScroll}>
+            <div className="settings__top">
+              <Avatar className="settings__avatar-wrapper" profile={profile} onPhotoSelected={onPhotoSelected} />
+              <div className="main-data">
+                <span className="main-data__name">{profile.fullName}</span>
+                <span className="main-data__username">@{profile.aboutMe}</span>
+              </div>
+            </div>
+
+            <div className="spacing"></div>
+
+            <ul className="settings__menu">
+              <li className="settings__item settings__item--profile" onClick={() => goNext('info')}>Edit Profile</li>
+              <li className="settings__item settings__item--chat">Chat Settings</li>
+              <li className="settings__item settings__item--hey" onClick={() => goNext('hey')}>hey</li>
+            </ul>
+
+            <button onClick={handleLogout}>Log out</button>
+            <span>{isAuth}</span>
+          </div>
+        </div>
+
+        {settings.map((setting, i) => setting[Object.keys(setting)[0]])}
+
       </div>
     </ReactModal>
   )
 }
 
-export default SettingsModal
+export default Settings

@@ -1,21 +1,62 @@
 .modal {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   right: 0;
   bottom: 0;
-  transform: translate(-38%, -50%);
+  transform: translate(-50%, -50%);
 
-  width: 30%;
-  // max-height: 605px;
-  // min-height: 470px;
-  height: 80vh;
+  width: 25%;
+  // min-height: 500px;
+
+  // height: 80vh;
+  min-height: 320px;
   max-height: 605px;
 
   background-color: #17212B;
   border-radius: 12px;
 
   overflow: hidden;
+
+  &__settings{
+    top: 53%;
+
+    // height: 95vh;
+    // max-height: 700px;
+    // max-height: 870px;
+
+    transform: translate(-38%, -50%);
+    transition: transform .2s ease-in-out, max-height .2s ease-in-out;
+
+    &--after-open {
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &__edit-profile {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(20%, 0);
+    transition: transform .2s ease-in-out;
+
+    width: 100%;
+    // height: 100%;
+    // max-height: 605px;
+
+    &--after-open {
+      transform: translate(0, 0);
+    }
+    &--before-close {
+      transform: translate(20%, 0);
+    }
+  }
+
+  &__mini {
+    width: 320px;
+    height: 245px;
+    min-height: 0;
+  }
 }
 
 .overlay {
@@ -26,11 +67,15 @@
   bottom: 0;
 
   background-color: rgba(0,0,0, .5);
+
+  &--nested {
+    background-color: transparent;
+  }
 }
 
 .ReactModal__Overlay {
   opacity: 0;
-  transition: opacity .3s ease-in-out;
+  transition: opacity .2s ease-in-out;
 
   &--after-open {
     opacity: 1;
@@ -40,29 +85,93 @@
   }
 }
 
-.ReactModal__Content {
-  &--before-close {
-    transform: translate(-38%, -50%);
-  }
-  &--after-open {
-    transform: translate(-50%, -50%);
-    transition: transform .3s ease-in-out;
-  }
+// .ReactModal__Content {
+//   transform: translate(-38%, -50%);
+//   transition: transform .2s ease-in-out;
+
+//   &--after-open {
+//     transform: translate(-50%, -50%);
+//   }
+//   &--before-close {
+//     transform: translate(-38%, -50%);
+//   }
+// }
+
+.modal-container,
+.modal-item {
+  height: 100%;
 }
+
+.modal-container {
+  display: flex;
+
+  transition: transform .2s ease;
+  transform: translateX(0);
+}
+
+.modal-item {
+  min-width: 100%;
+
+  // opacity: 0;
+  // transition: opacity .6s ease;
+
+  // &.active {
+  //   opacity: 1;
+  // }
+}
+
 .modal-header {
-  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+
+  // padding: 20px 0;
+
+  padding-top: 0;
   width: 100%;
-  border-bottom: 1px solid #101921;
+
+  &--profile {
+    // padding: 20px 0;
+  }
+
+  &.bordered {
+    border-bottom: 1px solid #101921;
+  }
+
+  &__left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 75px;
+  }
+
+  &--mini {
+    border-bottom: none;
+  }
 }
 
 .modal-header__title {
   margin: 0;
+  padding: 20px 0;
+  padding-left: 20px;
 
   font-size: 18px;
   color: white;
+
+  &--inner {
+    padding-left: 0;
+  }
+
+  &--mini {
+    // padding: 10px 0;
+    // padding-left: 20px;
+  }
 }
 
 .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+
   position: absolute;
   bottom: 0;
   left: 0;
@@ -72,11 +181,17 @@
   width: 100%;
 
   border-top: 1px solid #101921;
+
+  &__wrapper {
+    // margin-left: auto;
+  }
+
+  &--mini {
+    border-top: none;
+  }
 }
 
 .close-modal {
-  display: block;
-  margin-left: auto;
   padding: 9px 13px;
 
   background-color: transparent;
@@ -92,4 +207,44 @@
     background-color: rgba(255,255,255,.1);
     border-radius: 6px;
   }
+}
+
+.cross-modal {
+  padding: 20px;
+  background-color: transparent;
+  border: none;
+
+  font-size: 20px;
+  line-height: 100%;
+  color: #737E87;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    color: #DCDCDC;
+  }
+}
+
+.menu-arrow {
+  @include reset-button;
+
+  padding: 20px 30px;
+
+  background-position: center;
+  background-image: url('../../../images/settings/arrow.svg');
+  background-size: 24px;
+  background-repeat: no-repeat;
+
+  filter: invert(53%) sepia(15%) saturate(303%) hue-rotate(165deg) brightness(89%) contrast(87%);
+
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    filter: invert(100%) sepia(0%) saturate(7481%) hue-rotate(177deg) brightness(115%) contrast(73%);
+  }
+}
+
+.submodal-content {
+  padding: 0 20px;
 }

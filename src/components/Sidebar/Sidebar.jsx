@@ -11,13 +11,19 @@ import SettingsModal from '../Settings/Settings'
 const Sidebar = () => {
   const { modalShown, setModalShown, dispatch } = useSidebar()
 
-  const openModal = (e, type) => {
-    // setContactsModalShown(true)
+  const openModal = (type, e) => {
     setModalShown((modalShown) => ({
       ...modalShown,
       [type]: true
     }))
     dispatch(setContacts([]))
+  }
+
+  const closeModal = () => {
+    setModalShown((modals) => {
+      return Object.fromEntries(Object.keys(modals)
+        .map((key) => [key, false]))
+    })
   }
 
   return (
@@ -29,17 +35,16 @@ const Sidebar = () => {
               <div className="menu-icon"></div>
             </button>
           </div>
-
           <div className="sidebar-header__menu">
             <NavLink end to="/" className="sidebar__link">
               Messages
             </NavLink>
-            <ContactsModal modalShown={modalShown.contacts} setModalShown={setModalShown} />
-            <button onClick={(e) => openModal(e, 'contacts')} className="sidebar__link">
+            <ContactsModal modalShown={modalShown.contacts} setModalShown={setModalShown} closeModal={closeModal} />
+            <button onClick={() => openModal('contacts')} className="sidebar__link">
               Contacts
             </button>
-            <SettingsModal modalShown={modalShown.settings} setModalShown={setModalShown} />
-            <button onClick={(e) => openModal(e, 'settings')} className="sidebar__link">
+            <SettingsModal modalShown={modalShown.settings} setModalShown={setModalShown} openModal={openModal} closeModal={closeModal} />
+            <button onClick={() => openModal('settings')} className="sidebar__link">
               Settings
             </button>
           </div>

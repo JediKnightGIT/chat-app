@@ -4,6 +4,7 @@ import { settingsAPI } from "../../api/api";
 export const initialState = {
   profile: null,
   status: "",
+  position: 0
 };
 
 const settingsSlice = createSlice({
@@ -18,6 +19,15 @@ const settingsSlice = createSlice({
     },
     savePhoto(state, action) {
       state.profile.photos = action.payload;
+    },
+    incPosition(state, action) {
+      ++state.position 
+    },
+    decPosition(state, action) {
+      --state.position
+    },
+    resetPosition(state, action) {
+      state.position = 0
     },
   },
 });
@@ -89,5 +99,5 @@ function setFieldsError(field, messages, fieldsErrors, setError) {
     }
 }
 
-export const { setStatus, setProfile, savePhoto } = settingsSlice.actions;
+export const { setStatus, setProfile, savePhoto, incPosition, decPosition, resetPosition } = settingsSlice.actions;
 export default settingsSlice.reducer;

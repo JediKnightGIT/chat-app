@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
 
-import Spinner from '../../common/Spinner/Spinner'
 import { FormInput } from '../../common/Input/Input'
 import { saveProfile } from '../../../redux/slices/settings-slice'
+import Avatar from '../Avatar'
+import Submodal from './Submodal'
+import classnames from 'classnames'
+import useSettings from '../useSettings'
 
-const EditProfile = ({ userId, profile, status, getStatus, updateStatus, setPhoto, dispatch }) => {
+const EditProfile = ({ profile, status, closeModal, updateStatus, onPhotoSelected, dispatch, goBack }) => {
   const { register, handleSubmit, formState: { errors }, setError, clearErrors, reset } = useForm()
+  const position = useSelector((state) => state.settings.position)
+
+  const { isScrollTop, handleScroll } = useSettings()
 
   const [maxBioLength, setMaxBioLength] = useState(300)
+  const [subModal, setSubModal] = useState({
+    name: false,
+    username: false
+  })
 
   useEffect(() => {
     setMaxBioLength(300 - status.length)
@@ -25,21 +36,13 @@ const EditProfile = ({ userId, profile, status, getStatus, updateStatus, setPhot
   }, [status, profile, reset])
 
   const handleBioChange = (e) => {
-    // console.log('onChange')
     setMaxBioLength(300 - e.target.value.length)
   }
 
   const handleStopEditing = (e) => {
-    // console.log('onBlur')
     handleSubmit(() => {
       dispatch(updateStatus(e.target.value, setError))
     })()
-  }
-
-  const onPhotoSelected = (event) => {
-    if (event.target.files.length) {
-      dispatch(setPhoto(event.target.files[0]))
-    }
   }
 
   const onSubmit = (data) => {
@@ -58,61 +61,88 @@ const EditProfile = ({ userId, profile, status, getStatus, updateStatus, setPhot
     clearErrors('profile')
   }
 
-  if (!profile) return <Spinner />
+  const handleSubModal = (e) => {
+    const el = e.target
+    if ((el.classList.contains('overlay--mini')
+      || el.classList.contains('close-modal'))) {
+      setSubModal(() => ({
+        name: false,
+        username: false
+      }))
+    } else {
+      let type = el.dataset.submodal
+      setSubModal((subModal) => ({
+        [type]: !subModal[type]
+      }))
+    }
+  }
 
   return (
-    <div className="settings-subpage">
-      <h3>Info</h3>
-      <label>
-        <input type="file" accept="image/png, image/jpeg" onChange={onPhotoSelected} />
-        <img className="profile-picture" src={profile.photos.large || 'https://loremflickr.com/320/320'} width="80" height="80" alt="My profile" />
-      </label>
-      <div className="bio-field">
-        {/* <input onChange={handleBioChange} onBlur={handleStopEditing} type="text" className="bio-field__input" value={status} placeholder="Bio" /> */}
-
-        <form>
-          {maxBioLength}
-          <FormInput name="bio" id="bio" type="text" label="Bio" className="input-group"
-             placeholder="Bio"
-            //  value={bio}
-             onFocus={handleErrors}
-             {...register('bio', {
-              onChange: handleBioChange,
-              onBlur: handleStopEditing
-            })}
-            errors={errors}
-          />
-          {/* {errors.status && <div style={{ color: 'red' }}>{errors.status.message}</div>} */}
-          <input type="submit" hidden />
-        </form>
+    <div className={classnames("modal-item")}>
+      
+      <div className={classnames("modal-header", { "bordered": isScrollTop })}>
+        <div className="modal-header__left">
+          <button className="menu-arrow" onClick={goBack}></button>
+          <h2 className="modal-header__title modal-header__title--inner">Info</h2>
+        </div>
+        <button className="cross-modal" onClick={closeModal}>✕</button>
       </div>
+      <div className="settings-subpage" onScroll={handleScroll}>
+        {/* <h3 className="settings-subpage__title">Info</h3> */}
+        <div className="info__avatar">
+          <Avatar className="" profile={profile} onPhotoSelected={onPhotoSelected} />
+          <span className="main-data__name">{profile.fullName}</span>
+        </div>
+        <div className="bio-field">
+          <form>
+            <FormInput name="bio" id="bio" type="text" className="bio-input"
+              placeholder="Bio"
+              onFocus={handleErrors}
+              {...register('bio', {
+                onChange: handleBioChange,
+                onBlur: handleStopEditing
+              })}
+              errors={errors}
+            />
+            <span className="bio-length">{maxBioLength}</span>
+            {/* {errors.status && <div style={{ color: 'red' }}>{errors.status.message}</div>} */}
+            <input type="submit" hidden />
+          </form>
+        </div>
 
-      <div className="settings-field">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormInput name="firstName" id="first-name" type="text" label="First Name" className="input-group"
-            // value={firstName}
-            onFocus={handleErrors}
-            {...register('firstName')}
-            errors={errors}
-          />
-          <FormInput name="lastName" id="last-name" type="text" label="Last Name" className="input-group"
-            // value={lastName}
-            onFocus={handleErrors}
-            {...register('lastName')}
-            errors={errors}
-          />
+        <ul className="settings__menu">
+          <li className="settings__item settings__item--name" data-submodal="name" onClick={handleSubModal}>Name</li>
+          <li className="settings__item settings__item--username" data-submodal="username" onClick={handleSubModal}>Username</li>
+        </ul>
+        <form id="edit-profile-form" onSubmit={handleSubmit(onSubmit)}>
 
-          {/* Username as 'aboutMe' */}
-          <FormInput name="username" id="username" type="text" label="Username" className="input-group"
-            onFocus={handleErrors}
-            {...register('username')}
-            errors={errors}
-          />
+          <Submodal title="Edit your name" name="name" subModal={subModal.name} handleSubModal={handleSubModal}>
+            <FormInput name="firstName" id="first-name" type="text" label="First Name" classNameWrapper="input-field-container" className="input-field"
+              autoFocus onFocus={handleErrors}
+              {...register('firstName')}
+              errors={errors}
+            />
+            <FormInput name="lastName" id="last-name" type="text" label="Last Name" classNameWrapper="input-field-container" className="input-field"
+              onFocus={handleErrors}
+              {...register('lastName')}
+              errors={errors}
+            />
+          </Submodal>
 
-          <button type="submit">Save</button>
+          <Submodal title="Username" name="username" subModal={subModal.username} handleSubModal={handleSubModal}>
+            {/* Username as 'aboutMe' */}
+            <FormInput name="username" id="username" type="text" label="Username" classNameWrapper="input-field-container" className="input-field"
+              autoFocus onFocus={handleErrors}
+              {...register('username')}
+              errors={errors}
+            />
+          </Submodal>
+
           {errors.profile && <div style={{ color: 'red' }}>{errors.profile.message}</div>}
         </form>
+        {/* </div> */}
       </div>
+    {position}
     </div>
   )
 }

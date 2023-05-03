@@ -45,8 +45,8 @@ const Contacts = () => {
   )
 }
 
-export function ContactsModal({ modalShown, setModalShown }) {
-  const closeModal = () => setModalShown(false)
+export function ContactsModal({ modalShown, closeModal }) {
+  // const closeModal = () => setModalShown(false)
 
   return (
     <ReactModal

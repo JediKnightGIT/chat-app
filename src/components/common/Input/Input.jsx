@@ -6,15 +6,15 @@ import classNames from 'classnames';
 import { FormErrorMessage } from './form-error-message';
 
 
-export const FormInput = forwardRef(({ id, label, className, name, register, rules, errors, ...props }, ref) => {
+export const FormInput = forwardRef(({ id, label, classNameWrapper, className, name, register, rules, errors, ...props }, ref) => {
   const errorMessages = get(errors, name);
   const hasError = !!(errors && errorMessages);
 
   return (
-    <div ref={ref} className={className} aria-live="polite">
-      <label htmlFor={id}>{label}</label>
+    <div ref={ref} className={classNameWrapper} aria-live="polite">
+      <label className="input-label" htmlFor={id}>{label}</label>
       <Input id={id} name={name} aria-invalid={hasError}
-        className={classNames({
+        className={classNames(className, {
           'error-message':
             hasError
         })}
